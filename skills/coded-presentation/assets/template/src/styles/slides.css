@@ -1,0 +1,338 @@
+/* Layout of each slide. All measurements are in pixels of the 1920×1080 canvas. */
+
+.pad {
+  position: absolute;
+  inset: 96px 120px 110px;
+  display: flex;
+  flex-direction: column;
+}
+.pad > .src {
+  left: 0;
+  right: 0;
+  bottom: -50px;
+}
+
+/* Color legends, shared by the charts. */
+.legend {
+  display: flex;
+  gap: 44px;
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.legend > span::before {
+  content: '';
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 14px;
+  border-radius: 6px;
+  background: var(--ink);
+  transform: translateY(1px);
+}
+.legend > .k-hot::before {
+  background: var(--hot);
+}
+.legend > .k-cold::before {
+  background: var(--cold);
+}
+
+/* ---------------- Title, questions ---------------- */
+
+.title-slide {
+  justify-content: center;
+}
+.title-h {
+  font-size: 204px;
+}
+.title-sub {
+  margin-top: 30px;
+  font-size: 96px;
+  line-height: 1.05;
+  font-weight: 560;
+  letter-spacing: -0.038em;
+}
+.sign {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  font-size: 38px;
+  font-weight: 520;
+  letter-spacing: -0.01em;
+  color: var(--ink-2);
+}
+
+/* ---------------- Outline ---------------- */
+
+.outline {
+  justify-content: center;
+}
+.outline-row {
+  display: flex;
+  align-items: baseline;
+  gap: 60px;
+  padding: 36px 0 40px;
+  border-bottom: 1px solid var(--line);
+  font-size: 108px;
+  line-height: 1;
+  font-weight: 660;
+  letter-spacing: -0.042em;
+}
+.outline-row:last-child {
+  border-bottom: 0;
+}
+.outline-n {
+  width: 44px;
+  font-size: 44px;
+  font-weight: 500;
+  color: var(--hot);
+}
+
+/* ---------------- Part opener ---------------- */
+
+.opener {
+  position: absolute;
+  inset: 0;
+}
+.opener-n {
+  position: absolute;
+  right: 70px;
+  top: -92px;
+  font-size: 940px;
+  line-height: 1;
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: -0.06em;
+}
+.opener-n > span {
+  display: block;
+  color: var(--hot);
+  filter: url(#contour-hot);
+}
+.opener-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.opener-t {
+  position: absolute;
+  left: 120px;
+  bottom: 150px;
+  max-width: 1560px;
+}
+
+/* ---------------- Giant number and wall of points ---------------- */
+
+.gap {
+  position: absolute;
+  inset: 0;
+}
+.gap-left {
+  position: absolute;
+  left: 120px;
+  top: 56px;
+}
+.gap-right {
+  position: absolute;
+  right: 120px;
+  top: 56px;
+  text-align: right;
+}
+.gap-n,
+.gap-x {
+  font-size: 240px;
+  line-height: 1;
+  font-weight: 740;
+  font-stretch: 108%;
+  letter-spacing: -0.055em;
+  white-space: nowrap;
+}
+.gap-n .num {
+  transition: opacity 1.4s var(--ease) 0.3s;
+}
+.gap-n .gap-hot,
+.gap-n.burn .g-ink {
+  opacity: 0;
+}
+.gap-n.burn .gap-hot {
+  opacity: 1;
+}
+.gap-cap,
+.gap-range {
+  margin-top: 2px;
+  font-size: 46px;
+  font-weight: 480;
+  letter-spacing: -0.015em;
+  color: var(--ink-2);
+}
+.gap-range {
+  font-size: 40px;
+}
+.gap-legend {
+  position: absolute;
+  right: 120px;
+  top: 396px;
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.src.src-low {
+  bottom: 50px;
+}
+
+/* ---------------- Bars ---------------- */
+
+.ladder {
+  position: absolute;
+  left: 0;
+  bottom: 34px;
+  display: flex;
+  align-items: flex-end;
+  gap: 64px;
+}
+.ladder-col {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+}
+.ladder-price {
+  margin-bottom: 18px;
+  font-size: 60px;
+  font-weight: 560;
+  white-space: nowrap;
+  word-spacing: -0.34em;
+}
+.ladder-bar {
+  display: block;
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(180deg, #ffe2b8, #ff5a24);
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+  transition: transform 1.3s var(--ease);
+}
+.ladder-bar.on {
+  transform: none;
+}
+.ladder-col:nth-child(1) .ladder-bar {
+  background: var(--cold);
+}
+.ladder-col:nth-child(2) .ladder-bar {
+  background: linear-gradient(180deg, #f5f5f7, #a9e6ff);
+}
+.ladder-col:nth-child(3) .ladder-bar {
+  background: linear-gradient(180deg, #ffe2b8, #ffb23e);
+}
+.ladder-name {
+  width: 100%;
+  margin-top: 0;
+  padding-top: 20px;
+  border-top: 2px solid rgba(255, 255, 255, 0.28);
+  font-size: 42px;
+  font-weight: 620;
+  letter-spacing: -0.02em;
+}
+.ladder-x {
+  position: absolute;
+  right: 0;
+  top: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.ladder-x span {
+  font-size: 250px;
+  line-height: 1;
+  font-weight: 740;
+  font-stretch: 108%;
+  letter-spacing: -0.055em;
+}
+.ladder-x small {
+  font-size: 38px;
+  color: var(--ink-2);
+}
+
+/* ---------------- Before / after table ---------------- */
+
+.compare {
+  justify-content: center;
+}
+.cmp-head,
+.cmp-row {
+  display: grid;
+  grid-template-columns: 400px 1fr 1fr;
+  column-gap: 40px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--line);
+}
+.cmp-head {
+  padding-bottom: 26px;
+  font-size: 42px;
+  font-weight: 520;
+  color: var(--ink-2);
+}
+.cmp-row {
+  padding: 30px 0 40px;
+}
+.cmp-row:last-child {
+  border-bottom: 0;
+}
+.cmp-label {
+  font-size: 56px;
+  font-weight: 520;
+  letter-spacing: -0.02em;
+  color: var(--ink-2);
+}
+.cmp-a,
+.cmp-b {
+  font-size: 106px;
+  line-height: 1.1;
+  font-weight: 720;
+  font-stretch: 106%;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+
+/* ---------------- Takeaways ---------------- */
+
+.takeaways {
+  justify-content: center;
+}
+.keep {
+  display: flex;
+  align-items: baseline;
+  gap: 60px;
+  padding: 44px 0 48px;
+  border-bottom: 1px solid var(--line);
+}
+.keep:last-child {
+  border-bottom: 0;
+}
+.keep .mono {
+  flex: none;
+  width: 44px;
+  font-size: 44px;
+  font-weight: 500;
+  color: var(--hot);
+}
+.keep p {
+  font-size: 74px;
+  line-height: 1.06;
+  font-weight: 520;
+  letter-spacing: -0.038em;
+  color: var(--ink-2);
+}
+.keep b {
+  font-weight: 720;
+  color: var(--ink);
+}
+
+/* ---------------- One idea, revealed over several steps ---------------- */
+
+.idea {
+  justify-content: center;
+  gap: 34px;
+}
+.idea .t-title {
+  margin-bottom: 20px;
+}

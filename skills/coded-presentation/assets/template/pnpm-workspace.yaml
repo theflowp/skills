@@ -1,0 +1,4 @@
+# The deck is a standalone project, even when it sits inside another pnpm project's folder.
+packages: []
+allowBuilds:
+  esbuild: true

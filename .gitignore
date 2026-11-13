@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+dist/
+screenshots/
+captures/
+*.log
+.env
+.env.*

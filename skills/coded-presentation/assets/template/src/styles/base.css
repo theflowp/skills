@@ -1,0 +1,372 @@
+:root {
+  --ink: #f5f5f7;
+  --ink-2: rgba(245, 245, 247, 0.64);
+  --ink-3: rgba(245, 245, 247, 0.38);
+  --line: rgba(255, 255, 255, 0.16);
+  --hot: #ff5a24;
+  --hot-2: #ffb23e;
+  --cold: #5cc8ff;
+  --cold-2: #a9e6ff;
+  --sans: 'Mona Sans Variable', system-ui, sans-serif;
+  --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', monospace;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in: cubic-bezier(0.5, 0, 0.9, 0.4);
+  /* Only named elements take part in transitions: the WebGL background keeps running underneath. */
+  view-transition-name: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+p,
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+
+.viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+}
+.viewport.idle {
+  cursor: none;
+}
+
+/* The WebGL background fills the window; the slides stay 16:9, centered. */
+.stage {
+  position: absolute;
+  inset: 0;
+}
+.stage canvas {
+  display: block;
+}
+
+.frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: 0 0;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  view-transition-name: slide;
+}
+
+.blackout {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 50;
+}
+
+/* ---------------------------------------------------------------- */
+/* Typography                                                       */
+/* ---------------------------------------------------------------- */
+
+.t-hero {
+  font-size: 176px;
+  line-height: 0.96;
+  font-weight: 720;
+  font-stretch: 108%;
+  letter-spacing: -0.045em;
+}
+.t-title {
+  font-size: 112px;
+  line-height: 1.02;
+  font-weight: 680;
+  font-stretch: 104%;
+  letter-spacing: -0.038em;
+}
+.t-big {
+  font-size: 76px;
+  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+.t-body {
+  font-size: 46px;
+  line-height: 1.22;
+  font-weight: 480;
+  letter-spacing: -0.015em;
+  color: var(--ink-2);
+}
+/* Counter digits: one zero-wide box per digit. */
+.num {
+  position: relative;
+}
+/* Default width before measuring; Num replaces it with the width of the final digit at that position. */
+.num i {
+  display: inline-block;
+  width: calc(1ch - 0.04em);
+  font-style: normal;
+  text-align: center;
+}
+/* The thousands space (locales that group with a space). */
+.num b {
+  display: inline-block;
+  width: 0.17em;
+}
+.mono {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/*
+ * Text gradients: applied word by word.
+ * The gradient is only painted inside the element's box, and tight letter-spacing pushes the last
+ * letter past it. The padding enlarges the box; the negative margin keeps the layout unchanged.
+ */
+.g-ink,
+.g-hot,
+.g-cold {
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding: 0.12em 0.14em 0.24em;
+  margin: -0.12em -0.14em -0.24em;
+}
+.g-ink {
+  background-image: linear-gradient(180deg, #ffffff 25%, #9d9da6 110%);
+}
+.g-hot {
+  background-image: linear-gradient(180deg, #ffd9a0 5%, #ff8a3c 48%, #ff4a1c 95%);
+}
+.g-cold {
+  background-image: linear-gradient(180deg, #e6f7ff 5%, #7ed4ff 50%, #2f9bff 100%);
+}
+.c-hot {
+  color: var(--hot-2);
+}
+.c-cold {
+  color: var(--cold);
+}
+.c-2 {
+  color: var(--ink-2);
+}
+
+/* ---------------------------------------------------------------- */
+/* Reveals                                                          */
+/* ---------------------------------------------------------------- */
+
+.r {
+  opacity: 0;
+  transform: translate3d(0, 30px, 0);
+  filter: blur(12px);
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.95s var(--ease),
+    filter 0.7s var(--ease);
+}
+.r.on {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+.r.gone {
+  opacity: 0;
+  transform: translate3d(0, -26px, 0);
+  filter: blur(12px);
+  transition-duration: 0.4s;
+}
+.r-fade,
+.r-fade.gone {
+  transform: none;
+  filter: none;
+}
+.r-pop {
+  transform: scale(0.86);
+  filter: blur(8px);
+}
+.r-left {
+  transform: translate3d(-40px, 0, 0);
+}
+
+/* Words rising out of a mask. */
+/* Same reason: the mask must be wider than the word, or it clips the last letter. */
+.words .w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0.14em 0.18em 0.28em;
+  margin: -0.14em -0.18em -0.28em;
+}
+.words .wi {
+  display: inline-block;
+  padding: 0.12em 0.14em 0.24em;
+  margin: -0.12em -0.14em -0.24em;
+  transform: translate3d(0, 112%, 0) rotate(5deg);
+  transform-origin: 0 100%;
+  opacity: 0;
+  transition:
+    transform 1.05s var(--ease),
+    opacity 0.5s var(--ease),
+    font-stretch 1.6s var(--ease);
+}
+.words.on .wi {
+  transform: none;
+  opacity: 1;
+}
+.words.gone .wi {
+  transform: translate3d(0, -112%, 0);
+  opacity: 0;
+  transition-duration: 0.45s;
+  transition-timing-function: var(--ease-in);
+}
+
+/* Kinetic title: the letter width opens up on arrival (variable font). */
+.kin .wi {
+  font-stretch: 76%;
+}
+.kin.on .wi {
+  font-stretch: 112%;
+}
+
+/* Several elements stacked in the same spot, shown one after another. */
+.swap {
+  display: grid;
+}
+.swap > * {
+  grid-area: 1 / 1;
+}
+
+.src {
+  position: absolute;
+  left: 120px;
+  right: 120px;
+  bottom: 62px;
+  font-size: 25px;
+  line-height: 1.3;
+  color: var(--ink-3);
+  font-weight: 460;
+}
+
+/* ---------------------------------------------------------------- */
+/* Slide transitions (View Transitions API)                         */
+/* ---------------------------------------------------------------- */
+
+::view-transition-group(slide) {
+  animation: none;
+}
+::view-transition-image-pair(slide) {
+  isolation: auto;
+}
+::view-transition-old(slide) {
+  animation: slide-out 0.42s var(--ease-in) both;
+  mix-blend-mode: normal;
+}
+::view-transition-new(slide) {
+  animation: slide-in 0.5s 0.1s var(--ease) both;
+  mix-blend-mode: normal;
+}
+@keyframes slide-out {
+  to {
+    opacity: 0;
+    transform: translate3d(0, -22px, 0) scale(0.985);
+    filter: blur(16px);
+  }
+}
+@keyframes slide-in {
+  from {
+    opacity: 0;
+  }
+}
+:root[data-dir='back']::view-transition-old(slide) {
+  animation-name: slide-out-back;
+}
+@keyframes slide-out-back {
+  to {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0) scale(0.985);
+    filter: blur(16px);
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Chrome: progress bar, overview                                   */
+/* ---------------------------------------------------------------- */
+
+.progress {
+  position: absolute;
+  left: 120px;
+  right: 120px;
+  bottom: 34px;
+  display: flex;
+  gap: 10px;
+  transition: opacity 0.8s var(--ease);
+}
+.progress.quiet {
+  opacity: 0;
+}
+.progress-seg {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.13);
+  overflow: hidden;
+}
+.progress-seg > span {
+  display: block;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.72);
+  transform-origin: 0 50%;
+  transition: transform 0.9s var(--ease);
+}
+
+.overview {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.86);
+  backdrop-filter: blur(18px);
+  display: grid;
+  place-items: center;
+  padding: 4vh 4vw;
+}
+.overview ol {
+  list-style: none;
+  columns: 3;
+  column-gap: 3vw;
+  width: min(1500px, 92vw);
+}
+.overview button {
+  all: unset;
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  padding: 0.5em 0.8em;
+  border-radius: 10px;
+  font: 500 clamp(15px, 1.5vw, 24px) / 1.2 var(--sans);
+  color: var(--ink-2);
+  cursor: pointer;
+  break-inside: avoid;
+}
+.overview button span {
+  font-family: var(--mono);
+  color: var(--ink-3);
+}
+.overview button:hover,
+.overview button.current {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--ink);
+}

@@ -1,0 +1,33 @@
+{
+  "name": "theflowp-skills",
+  "owner": {
+    "name": "theflowp"
+  },
+  "metadata": {
+    "description": "Agent Skills for coded presentations, effective posters and plain-language PR summaries.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "coded-presentation",
+      "description": "Keynote-grade presentations built as a local Vite + React site, with a WebGL background, step reveals and a presenter view.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/coded-presentation"]
+    },
+    {
+      "name": "effective-poster",
+      "description": "Design, audit and redo posters, flyers and menus that read in 3 seconds and don't look like generic AI output.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/effective-poster"]
+    },
+    {
+      "name": "pr-to-webpage",
+      "description": "Turn a GitHub pull request into a self-contained, plain-language HTML page for non-technical readers.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/pr-to-webpage"]
+    }
+  ]
+}
